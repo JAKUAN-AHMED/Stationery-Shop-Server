@@ -1,7 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { IOrder } from '../interfaces/OrderInterface';
 
-
 const OrderSchema = new Schema<IOrder>(
   {
     email: { type: String, required: true },

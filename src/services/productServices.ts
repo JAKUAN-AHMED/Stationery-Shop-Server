@@ -8,15 +8,18 @@ const createProductIntoDB = async (productData: Product): Promise<Product> => {
 };
 
 //get all products
-const getAllProductsFromDB = async (searchTerm?:string): Promise<Product[]> => {
-  const filter=searchTerm? {
-    $or:[
-      {name:{$regex:searchTerm,$options:'i'}},
-      {brand:{$regex:searchTerm,$options:'i'}},
-      {category:{$regex:searchTerm,$options:'i'}},
-     
-    ]
-  }:{}
+const getAllProductsFromDB = async (
+  searchTerm?: string,
+): Promise<Product[]> => {
+  const filter = searchTerm
+    ? {
+        $or: [
+          { name: { $regex: searchTerm, $options: 'i' } },
+          { brand: { $regex: searchTerm, $options: 'i' } },
+          { category: { $regex: searchTerm, $options: 'i' } },
+        ],
+      }
+    : {};
   return await ProductModel.find(filter);
 };
 

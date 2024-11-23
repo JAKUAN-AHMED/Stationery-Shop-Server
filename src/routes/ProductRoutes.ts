@@ -1,6 +1,9 @@
 import express from 'express';
 import { ValidateRequest } from '../middlewares/ValidateRequest';
-import { productUpdateValidation, productValidation } from '../utility/ProductValidation';
+import {
+  productUpdateValidation,
+  productValidation,
+} from '../utility/ProductValidation';
 import { ProductController } from '../Controllers/ProductController';
 
 const router = express.Router();

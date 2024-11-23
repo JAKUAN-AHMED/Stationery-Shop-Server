@@ -22,8 +22,10 @@ const createProduct = async (req: Request, res: Response): Promise<void> => {
 //get all product
 const getAllProducts = async (req: Request, res: Response): Promise<void> => {
   try {
-    const {searchTerm}=req.query;
-    const products = await ProductService.getAllProductsFromDB(searchTerm as string);
+    const { searchTerm } = req.query;
+    const products = await ProductService.getAllProductsFromDB(
+      searchTerm as string,
+    );
     res.status(200).json({
       success: true,
       message: 'Successfully got all Products',
@@ -67,7 +69,7 @@ const getProductById = async (req: Request, res: Response): Promise<void> => {
 const updateProduct = async (req: Request, res: Response): Promise<void> => {
   try {
     const { productId } = req.params;
-    const updateData=req.body;
+    const updateData = req.body;
     const product = await ProductService.updateProductFromDB(
       productId,
       updateData,

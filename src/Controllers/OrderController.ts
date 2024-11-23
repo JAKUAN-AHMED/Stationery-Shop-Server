@@ -1,12 +1,9 @@
 import { Request, Response } from 'express';
 import { OrderServices } from '../services/OrderServices';
 
-const createOrder = async (
-  req: Request,
-  res: Response,
-):Promise<void>=> {
+const createOrder = async (req: Request, res: Response): Promise<void> => {
   try {
-    const result = await OrderServices.createOrderIntoDb(req,res);
+    const result = await OrderServices.createOrderIntoDb(req, res);
     res.status(201).json(result);
   } catch (error: any) {
     res.status(500).json({
@@ -16,7 +13,7 @@ const createOrder = async (
     });
   }
 };
-const getAllOrder=async(req:Request,res:Response):Promise<void>=>{
+const getAllOrder = async (req: Request, res: Response): Promise<void> => {
   try {
     const orders = await OrderServices.getAllOrderFromDb();
     res.status(200).json({
@@ -31,9 +28,9 @@ const getAllOrder=async(req:Request,res:Response):Promise<void>=>{
       datails: error,
     });
   }
-}
+};
 
-const getOrderById=async(req:Request,res:Response):Promise<void>=>{
+const getOrderById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { OrderId } = req.params;
     const order = await OrderServices.getOrderByIdFromDB(OrderId);
@@ -55,8 +52,7 @@ const getOrderById=async(req:Request,res:Response):Promise<void>=>{
       details: error,
     });
   }
-  
-}
+};
 
 const UpdateOrder = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -100,22 +96,22 @@ const deleteOrder = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const  calculateRevenue=async(req:Request,res:Response):Promise<void>=>{
-  try{
-    const totalRevenue=await OrderServices.calculateRevenueFromDB();
+const calculateRevenue = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const totalRevenue = await OrderServices.calculateRevenueFromDB();
     res.status(200).json({
       message: 'Revenu calculated Successfully',
       status: true,
-      totalRevenue: {totalRevenue},
+      totalRevenue: { totalRevenue },
     });
-  }catch(error:any){
+  } catch (error: any) {
     res.status(500).json({
       success: false,
       message: 'Failed to calculate revenue',
       details: error.message,
     });
   }
-}
+};
 export const orderController = {
   createOrder,
   getAllOrder,

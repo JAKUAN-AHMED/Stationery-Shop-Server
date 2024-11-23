@@ -20,4 +20,4 @@ export const productValidation = z.object({
   quantity: z.number().int().positive('Quantity must be a positive number'),
   inStock: z.boolean(),
 });
-export const productUpdateValidation=productValidation.partial();
+export const productUpdateValidation = productValidation.partial();
