@@ -25,6 +25,11 @@ const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     const products = await ProductService.getAllProductsFromDB(
       searchTerm as string,
     );
+   if(!products || products.length==0) {res.status(404).json({
+      message: 'Products not found',
+      status: false,
+      data: products,
+    })};
     res.status(200).json({
       message: 'Products retrieved successfully',
       status: true,
