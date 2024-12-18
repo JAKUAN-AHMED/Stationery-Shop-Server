@@ -8,7 +8,7 @@ const createProduct = async (req: Request, res: Response): Promise<void> => {
     res.status(201).json({
       message: 'Product created successfully',
       status: true,
-      data: { product },
+      data: product,
     });
   } catch (error: any) {
     res.status(500).json({
@@ -28,7 +28,7 @@ const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: 'Products retrieved successfully',
       status: true,
-      data: [products],
+      data: products,
     });
   } catch (error: any) {
     res.status(404).json({
@@ -53,7 +53,7 @@ const getProductById = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: 'Product retrieved successfully',
       status: true,
-      data: { product },
+      data:  product ,
     });
   } catch (error) {
     res.status(500).json({
@@ -82,7 +82,7 @@ const updateProduct = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: 'Product updated successfully',
       status: true,
-      data: { product },
+      data: product ,
     });
   } catch (error) {
     res.status(500).json({
@@ -105,7 +105,7 @@ const deleteProduct = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: 'Product deleted successfully',
       status: true,
-      product: {},
+      data: {},
     });
   } catch (error) {
     res.status(500).json({

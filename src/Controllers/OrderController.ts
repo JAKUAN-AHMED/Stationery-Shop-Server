@@ -7,7 +7,7 @@ const createOrder = async (req: Request, res: Response): Promise<void> => {
     res.status(201).json({
       message: 'Order created successfully',
       status: true,
-      data: { result },
+      data: result,
     });
   } catch (error: any) {
     res.status(500).json({
@@ -23,7 +23,7 @@ const getAllOrder = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: 'Orders retrived successfully',
       status: true,
-      data: { orders },
+      data:  orders ,
     });
   } catch (error: any) {
     res.status(404).json({
@@ -47,7 +47,7 @@ const getOrderById = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: 'Order retrived successfully',
       status: true,
-      data: { order },
+      data:  order ,
     });
   } catch (error) {
     res.status(500).json({
@@ -71,7 +71,7 @@ const UpdateOrder = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: 'Order  updated successfully',
       status: true,
-      data: { order },
+      data: order ,
     });
   } catch (error) {
     res.status(500).json({
@@ -106,7 +106,7 @@ const calculateRevenue = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: 'Revenue calculated successfully',
       status: true,
-      data: { totalRevenue },
+      data: {totalRevenue} ,
     });
   } catch (error: any) {
     res.status(500).json({
