@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import ProductModel from '../Models/ProductModel';
 import { ProductService } from '../services/productServices';
 
 //create product
@@ -7,9 +6,9 @@ const createProduct = async (req: Request, res: Response): Promise<void> => {
   try {
     const product = await ProductService.createProductIntoDB(req.body);
     res.status(201).json({
-      success: true,
       message: 'Product created successfully',
-      product,
+      status: true,
+      data: { product },
     });
   } catch (error: any) {
     res.status(500).json({
@@ -27,14 +26,14 @@ const getAllProducts = async (req: Request, res: Response): Promise<void> => {
       searchTerm as string,
     );
     res.status(200).json({
-      success: true,
-      message: 'Successfully got all Products',
-      products,
+      message: 'Products retrieved successfully',
+      status: true,
+      data: [products],
     });
   } catch (error: any) {
     res.status(404).json({
-      success: false,
       message: 'Product Not Found',
+      status: false,
       datails: error,
     });
   }
@@ -52,14 +51,14 @@ const getProductById = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json({
-      success: true,
-      message: 'Successfully got Product bY Id',
-      product,
+      message: 'Product retrieved successfully',
+      status: true,
+      data: { product },
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
       message: 'Failed to Fetch Product',
+      status: false,
       details: error,
     });
   }
@@ -81,14 +80,14 @@ const updateProduct = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json({
-      success: true,
-      message: 'product successfully updated',
-      product,
+      message: 'Product updated successfully',
+      status: true,
+      data: { product },
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
       message: 'Failed to update Product',
+      status: false,
       details: error,
     });
   }
@@ -104,14 +103,14 @@ const deleteProduct = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json({
-      message: 'product successfully deleted',
+      message: 'Product deleted successfully',
       status: true,
       product: {},
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
       message: 'Failed to delete Product',
+      status: false,
       details: error,
     });
   }
