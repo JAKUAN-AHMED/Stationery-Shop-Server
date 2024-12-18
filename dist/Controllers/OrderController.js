@@ -17,7 +17,7 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(201).json({
             message: 'Order created successfully',
             status: true,
-            data: { result },
+            data: result,
         });
     }
     catch (error) {
@@ -34,7 +34,7 @@ const getAllOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(200).json({
             message: 'Orders retrived successfully',
             status: true,
-            data: { orders },
+            data: orders,
         });
     }
     catch (error) {
@@ -58,7 +58,7 @@ const getOrderById = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(200).json({
             message: 'Order retrived successfully',
             status: true,
-            data: { order },
+            data: order,
         });
     }
     catch (error) {
@@ -82,7 +82,7 @@ const UpdateOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(200).json({
             message: 'Order  updated successfully',
             status: true,
-            data: { order },
+            data: order,
         });
     }
     catch (error) {

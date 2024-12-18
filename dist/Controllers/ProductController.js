@@ -18,7 +18,7 @@ const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(201).json({
             message: 'Product created successfully',
             status: true,
-            data: { product },
+            data: product,
         });
     }
     catch (error) {
@@ -36,7 +36,7 @@ const getAllProducts = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(200).json({
             message: 'Products retrieved successfully',
             status: true,
-            data: [products],
+            data: products,
         });
     }
     catch (error) {
@@ -61,7 +61,7 @@ const getProductById = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(200).json({
             message: 'Product retrieved successfully',
             status: true,
-            data: { product },
+            data: product,
         });
     }
     catch (error) {
@@ -87,7 +87,7 @@ const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(200).json({
             message: 'Product updated successfully',
             status: true,
-            data: { product },
+            data: product,
         });
     }
     catch (error) {
@@ -111,7 +111,7 @@ const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(200).json({
             message: 'Product deleted successfully',
             status: true,
-            product: {},
+            data: {},
         });
     }
     catch (error) {
