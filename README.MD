@@ -103,9 +103,9 @@ The application will be live at http://localhost:5000.
 📝 Product Endpoints
 POST /api/products: Add a new product.
 GET /api/products: Retrieve all products.
-GET /api/products/:id: Retrieve details of a specific product.
-PUT /api/products/:id: Update product details.
-DELETE /api/products/:id: Delete a product.
+GET /api/products/:productId: Retrieve details of a specific product.
+PUT /api/products/:productId: Update product details.
+DELETE /api/products/:productId: Delete a product.
 🛍️ Order Endpoints
 POST /api/orders: Place an order.
 GET /api/orders/revenue: Retrieve revenue details.
