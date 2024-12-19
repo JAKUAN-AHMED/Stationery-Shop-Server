@@ -33,6 +33,14 @@ const getAllProducts = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const { searchTerm } = req.query;
         const products = yield productServices_1.ProductService.getAllProductsFromDB(searchTerm);
+        if (!products || products.length == 0) {
+            res.status(404).json({
+                message: 'Products not found',
+                status: false,
+                data: products,
+            });
+        }
+        ;
         res.status(200).json({
             message: 'Products retrieved successfully',
             status: true,

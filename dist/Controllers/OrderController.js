@@ -31,11 +31,20 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 const getAllOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const orders = yield OrderServices_1.OrderServices.getAllOrderFromDb();
-        res.status(200).json({
-            message: 'Orders retrived successfully',
-            status: true,
-            data: orders,
-        });
+        if (!orders || orders.length == 0) {
+            res.status(404).json({
+                message: 'Orders Not Found',
+                status: false,
+                data: orders,
+            });
+        }
+        else {
+            res.status(200).json({
+                message: 'Orders retrived successfully',
+                status: true,
+                data: orders,
+            });
+        }
     }
     catch (error) {
         res.status(404).json({
@@ -51,7 +60,8 @@ const getOrderById = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const order = yield OrderServices_1.OrderServices.getOrderByIdFromDB(OrderId);
         if (!order) {
             res.status(404).json({
-                error: 'Order Not Found',
+                message: 'Order Not Found',
+                status: false,
             });
             return;
         }
@@ -97,6 +107,13 @@ const deleteOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const { OrderId } = req.params;
         const order = yield OrderServices_1.OrderServices.deleteOrderFromDB(OrderId);
+        if (!order) {
+            res.status(404).json({
+                message: 'Order Not Found',
+                status: false,
+                data: {},
+            });
+        }
         res.status(200).json({
             message: 'Order successfully deleted',
             status: true,
