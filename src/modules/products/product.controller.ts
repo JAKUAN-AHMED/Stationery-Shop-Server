@@ -45,8 +45,37 @@ const singleProduct=catchAsync(async(req,res)=>{
     })
 })
 
-export const ProductControllers={
-    createProduct,
-    getAllProduct,
-    singleProduct
-}
+//update
+const updateProduct=catchAsync(async(req,res)=>{
+    const product=await productServices.updateProduct(req.params.productId,req.body);
+    const isHas=product? true:false;
+    sendResponse(res, {
+      statusCode: isHas ? 200 : 404,
+      success: isHas ? true : false,
+      message: isHas
+        ? 'product updated successfully'
+        : ' product not available',
+      data: isHas ? product : [],
+    });
+})
+
+//delete
+const deleteProduct = catchAsync(async (req, res) => {
+  const deletedProduct = await productServices.deleteProduct(req.params.productId);
+  const isHas = deletedProduct ? true : false;
+  sendResponse(res, {
+    statusCode: isHas ? 200 : 404,
+    success: isHas ? true : false,
+    message: isHas
+      ? 'product deleted successfully'
+      : ' product not found',
+  });
+});
+
+export const ProductControllers = {
+  createProduct,
+  getAllProduct,
+  singleProduct,
+  updateProduct,
+  deleteProduct
+};

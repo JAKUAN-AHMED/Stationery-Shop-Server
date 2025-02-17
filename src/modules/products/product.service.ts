@@ -17,8 +17,21 @@ const singleProduct=async(productId:string)=>{
     return await productModel.findById(productId);
 }
 
+//update product
+const updateProduct=async(productId:string,payload:Partial<Iproduct>)=>{
+    return await productModel.findByIdAndUpdate(productId,{$set:payload},{new:true,runValidators:true});
+}
+
+
+//product delete
+const deleteProduct = async (productId: string) => {
+  return await productModel.findByIdAndDelete(productId);
+};
+
 export const productServices = {
   createProductIntoDb,
   getAllProductFromDB,
-  singleProduct
+  singleProduct,
+  updateProduct,
+  deleteProduct,
 };
