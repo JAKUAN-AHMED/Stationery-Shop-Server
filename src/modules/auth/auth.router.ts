@@ -11,5 +11,8 @@ router.post('/register',validateRequest(createUserValidation),AuthController.reg
 //login
 router.post('/login',AuthController.login)
 
+//logout
+router.post('/logout',AuthController.logout)
+
 
 export const AuthRoutes=router;

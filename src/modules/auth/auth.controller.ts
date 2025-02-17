@@ -35,6 +35,13 @@ const login = catchAsync(async (req, res)=> {
     config.access_token_secret as string,
     { expiresIn: config.access_token_expires as any},
   );
+
+   res.cookie('token', token, {
+     httpOnly: true,
+     secure: process.env.NODE_ENV === 'production', 
+     sameSite: 'strict', 
+     maxAge: 3600000, 
+   });
   sendResponse(res,{
     statusCode:token ? 200 : 500,
     success:true,
@@ -44,8 +51,35 @@ const login = catchAsync(async (req, res)=> {
   
 });
 
+const logout = catchAsync(async (req, res) => {
+  
+  if (req.cookies.token && req.headers.authorization) {
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: 'Logout successful',
+      data: [],
+    });
+  } else {
+    sendResponse(res, {
+      statusCode: 400,
+      success: false,
+      message: 'No token found. User is not logged in.',
+      data: [],
+    });
+  }
+});
+
+
 
 export const AuthController={
     register,
-    login
+    login,
+    logout
 }

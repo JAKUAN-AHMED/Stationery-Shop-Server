@@ -4,9 +4,16 @@ import globalErrorHandler from './middlewares/globalErrorHandler';
 import NotFound from './middlewares/NotFound';
 import router from './router/routes';
 import cookieParser from "cookie-parser";
+import cors from "cors"
+
 app.use(express.json());
 app.use(cookieParser());
+const corsOptions = {
+  origin: 'http://localhost:3000', // Replace with your frontend URL
+  credentials: true, // Allow cookies to be sent
+};
 
+app.use(cors(corsOptions));
 
 //test route
 const test=async(req:Request,res:Response)=>{
