@@ -22,6 +22,31 @@ const createProduct=catchAsync(async(req,res)=>{
 })
 
 
+const getAllProduct=catchAsync(async(req,res)=>{
+    const products=await productServices.getAllProductFromDB();
+    const isHas=products.length>0 ? true:false;
+    sendResponse(res,{
+        statusCode:isHas ? 200 : 404,
+        success:isHas?true:false,
+        message:isHas ? "All products retrieved successfully" :"there is no product available",
+        data:isHas? products : []
+    })
+})
+
+//single product
+const singleProduct=catchAsync(async(req,res)=>{
+    const product=await productServices.singleProduct(req.params.productId);
+    const isHas=product? true:false;
+    sendResponse(res,{
+        statusCode:isHas ? 200 : 404,
+        success:isHas?true:false,
+        message:isHas ? "product retrieved successfully" :" product not available",
+        data:isHas? product : []
+    })
+})
+
 export const ProductControllers={
-    createProduct
+    createProduct,
+    getAllProduct,
+    singleProduct
 }

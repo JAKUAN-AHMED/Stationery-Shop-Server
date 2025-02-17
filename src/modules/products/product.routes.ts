@@ -7,4 +7,10 @@ const router=Router();
 //create product
 router.post('/create-product',auth('admin'),ProductControllers.createProduct)
 
+//get all products
+router.get('/',ProductControllers.getAllProduct);
+
+//product by Id
+router.get('/:productId',ProductControllers.singleProduct)
+
 export const ProductRoutes=router;
