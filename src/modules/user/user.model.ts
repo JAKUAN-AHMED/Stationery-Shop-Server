@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { IUser } from "./user.interface";
+import { IUser, UserInterfaceModel } from "./user.interface";
 
 const userSchema=new Schema<IUser>({
     name:{type:String},
@@ -8,5 +8,10 @@ const userSchema=new Schema<IUser>({
     role:{type:String,enum:["user","admin"],default:"user"}
 },{timestamps:true})
 
-const UserModel=model<IUser>("user",userSchema);
+//static method for checking if user exist by custom id
+userSchema.statics.isUserExistByCustomId = async function (id: string) {
+  return this.findOne({ id }).select('+password');
+}
+
+const UserModel = model<IUser, UserInterfaceModel>('user', userSchema);
 export default UserModel;
