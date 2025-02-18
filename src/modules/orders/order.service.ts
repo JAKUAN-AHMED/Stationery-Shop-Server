@@ -1,3 +1,5 @@
+import QueryBuilder from "../../builder/QueryBuilder";
+import { OrderSearchableFields } from "./order.constant";
 import { IOrder } from "./order.interface";
 import OrderModel from "./order.model";
 
@@ -8,8 +10,15 @@ const createOrder=async(payload:Partial<IOrder>)=>{
 
 
 //all order
-const getAllOrder=async()=>{
-    return await OrderModel.find();
+const getAllOrder=async(query:Record<string,unknown>)=>{
+    const orders=new QueryBuilder(OrderModel.find(),query)
+    .search(OrderSearchableFields)
+    .filter()
+    .paginate()
+    .sort()
+    .fields()
+
+    return await orders.modelQuery;
 }
 
 //single

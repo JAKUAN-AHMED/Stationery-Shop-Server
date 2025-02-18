@@ -23,7 +23,7 @@ const createProduct=catchAsync(async(req,res)=>{
 
 
 const getAllProduct=catchAsync(async(req,res)=>{
-    const products=await productServices.getAllProductFromDB();
+    const products=await productServices.getAllProductFromDB(req.query);
     const isHas=products.length>0 ? true:false;
     sendResponse(res,{
         statusCode:isHas ? 200 : 404,

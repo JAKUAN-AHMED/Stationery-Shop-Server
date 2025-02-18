@@ -40,7 +40,7 @@ const createOrder=catchAsync(async(req,res)=>{
 
 
 const getAllOrder = catchAsync(async (req, res) => {
-  const orders = await OrderServices.getAllOrder();
+  const orders = await OrderServices.getAllOrder(req.query);
   const isHas = orders.length > 0 ? true : false;
   sendResponse(res, {
     statusCode: isHas ? 200 : 404,

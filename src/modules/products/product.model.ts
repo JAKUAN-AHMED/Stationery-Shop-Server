@@ -7,6 +7,7 @@ const productSchema=new Schema<Iproduct>({
     price:{type:Number},
     model:{type:String},
     stock:{type:Number},
+    inStock:{type:Boolean,default:true}
 },{
     timestamps:true
 })

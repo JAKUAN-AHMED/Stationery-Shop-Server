@@ -3,5 +3,6 @@ export interface Iproduct{
     brand:string,
     price:number,
     model:string,
-    stock:number
+    stock:number,
+    inStock:boolean,
 }
