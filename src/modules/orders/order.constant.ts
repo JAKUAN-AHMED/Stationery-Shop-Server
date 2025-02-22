@@ -3,5 +3,5 @@ export const OrderSearchableFields = [
   'status',
   'paymentStatus',
   'user',
-  '_id'
+  '_id',
 ];

@@ -1,59 +1,32 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import catchAsync from "../../utility/catchAsync";
+import catchAsync from '../../utility/catchAsync';
 import config from '../../config';
-import UserModel from '../user/user.model';
+
 import sendResponse from '../../utility/sendResponse';
-import AppError from '../../errors/AppError';
+
 import { AuthServices } from './auth.services';
-import httpStatus from "http-status";
-const register=catchAsync(async(req,res):Promise<any>=>{
-    
-   const {name,email,password,role}=req.body;
-   const hashPassword=await bcrypt.hash(password,config.bcrypt_salt);
-   const user=await UserModel.create({name,email,password:hashPassword,role});
-     sendResponse(res,{
-        statusCode:user? 200 : 400,
-        success:user ? true :false ,
-        message:user ? "user registerd successfully" : "user registration failed",
-        data:user? user : []
-     })
-})
+import httpStatus from 'http-status';
 
-const login = catchAsync(async (req, res) => {
-  const { email, password } = req.body;
+const loginUser = catchAsync(async (req, res) => {
+  const result = await AuthServices.loginUser(req.body);
+  const { accesToken, refreshToken } = result;
 
-  // Check if user exists
-  const user = await UserModel.findOne({ email }).select('+password');
-
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    throw new AppError(401, 'Invalid credentials'); // Throw error if invalid
-  }
-
-  // Generate token
-  const token = jwt.sign(
-    { userId: user._id, role: user.role },
-    config.access_token_secret as string,
-    { expiresIn: config.access_token_expires as any },
-  );
-
-  res.cookie('token', token, {
+  //set cookie
+  res.cookie('refreshToken', refreshToken, {
+    secure: config.node_env === 'production',
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 3600000,
+    sameSite: 'none',
+    maxAge: 1000 * 60 * 60 * 24 * 365,
   });
 
   sendResponse(res, {
-    statusCode: token ? 200 : 500,
+    statusCode: accesToken ? 200 : 500,
     success: true,
-    message: token ? "login successful" : "you are not an authorized user",
-    data: token ? { token } : [],
+    message: accesToken ? 'login successful' : 'you are not an authorized user',
+    data: accesToken ? { token: accesToken } : [],
   });
 });
 
 const logout = catchAsync(async (req, res) => {
-  
   if (req.cookies.token && req.headers.authorization) {
     res.clearCookie('token', {
       httpOnly: true,
@@ -77,46 +50,37 @@ const logout = catchAsync(async (req, res) => {
   }
 });
 
-
-const updateProfile=catchAsync(async(req,res)=>{
-  const {name,email,phone}=req.body;
-  const profile = await AuthServices.updateProfile(req.params.userId, {
-    name,
-    email,
-    phone,
-  });
-   const isHas = profile? true : false;
-   sendResponse(res, {
-     statusCode: isHas ? 200 : 404,
-     success: isHas ? true : false,
-     message: isHas
-       ? 'profile updated successfully'
-       : 'there is no user available',
-     data: isHas ? profile : [],
-   });
-})
-
-//everything for forget
-
 //Change password
-const changePassword=catchAsync(async (req,res)=>{
-    const {...passwordData}=req.body;
+const changePassword = catchAsync(async (req, res) => {
+  const { ...passwordData } = req.body;
 
-    const result=await AuthServices.changePasswordIntoDB(req.user,passwordData);
-    sendResponse(res,{
-        statusCode:httpStatus.OK,
-        message:"Password changed successfully",
-        success:true,
-        data:result
-    })
+  const result = await AuthServices.changePasswordIntoDB(
+    req.user,
+    passwordData,
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    message: 'Password changed successfully',
+    success: true,
+    data: result,
+  });
 });
 
+const refreshToken = catchAsync(async (req, res) => {
+  const { refreshToken } = req.cookies;
+  const result = await AuthServices.refreshToken(refreshToken);
 
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Access token is retrieved succesfully!',
+    data: result,
+  });
+});
 
 export const AuthController = {
-  register,
-  login,
+  loginUser,
   logout,
-  updateProfile,
+  refreshToken,
   changePassword,
 };

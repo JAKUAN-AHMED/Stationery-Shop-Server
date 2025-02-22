@@ -1,15 +1,104 @@
-import  httpStatus  from 'http-status';
-import { JwtPayload } from "jsonwebtoken";
-import { IUser } from "../user/user.interface"
-import UserModel from "../user/user.model"
+import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import bcrypt from 'bcryptjs';
 import config from '../../config';
+import { UserModel } from '../user/user.model';
+import { JwtPayload } from 'jsonwebtoken';
+import { TLoginUser } from './auth.interface';
+import { createToken, verifyToken } from './auth.utils';
 
+//login user
+const loginUser = async (payload: TLoginUser) => {
+  //   check if user exist
+  const user = await UserModel.isUserExistsByCustomEmail(payload.email);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
 
-const updateProfile=async(userId:string,payload:Partial<IUser>)=>{
-    return await UserModel.findByIdAndUpdate(userId,{$set:payload},{new:true,runValidators:true});
-}
+  //check user is blocked
+  if (user.status === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'User is blocked');
+  }
+
+  // check if password match
+  const storedHashedPassword = user.password;
+  if (
+    !(await UserModel.isPasswordMatch(payload.password, storedHashedPassword))
+  ) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid password');
+  }
+
+  // access granted:send accestoken,refreshtoken
+
+  const JwtPayload = {
+    email: user.email,
+    role: user.role , // provide a default role if undefined
+  };
+
+  //create toke and send to the client
+  const accesToken = createToken(
+    JwtPayload,
+    config.access_token_secret as string,
+    config.access_token_expires as string,
+  );
+
+  //refresh token
+  const refreshToken = createToken(
+    JwtPayload,
+    config.access_token_secret as string,
+    config.refresh_token_expires as string,
+  );
+
+  return {
+    accesToken,
+    refreshToken,
+  };
+};
+
+const refreshToken = async (token: string) => {
+  // checking if the given token is valid
+  const decoded = verifyToken(
+    token,
+    config.access_token_secret as string,
+  ) as JwtPayload;
+
+  const { email } = decoded;
+
+  // checking if the user is exist
+  const user = await UserModel.isUserExistsByCustomEmail(email);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
+  }
+  // checking if the user is already deleted
+  const isDeleted = user?.isDeleted;
+
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted !');
+  }
+
+  // checking if the user is blocked
+  const userStatus = user?.status;
+
+  if (userStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
+  }
+
+  const JwtPayload = {
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = createToken(
+    JwtPayload,
+    config.access_token_secret as string,
+    config.refresh_token_expires as string,
+  );
+
+  return {
+    accessToken,
+  };
+};
 
 //change pass
 const changePasswordIntoDB = async (
@@ -17,12 +106,11 @@ const changePasswordIntoDB = async (
   payload: { oldPassword: string; newPassword: string },
 ) => {
   // checking if the user is exist
-  const user = await UserModel.isUserExistByCustomId(userData.id);
+  const user = await UserModel.isUserExistsByCustomEmail(userData.email);
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
   }
- 
 
   //checking if the password is correct
 
@@ -49,8 +137,8 @@ const changePasswordIntoDB = async (
   return null;
 };
 
-
 export const AuthServices = {
-  updateProfile,
+  refreshToken,
   changePasswordIntoDB,
+  loginUser,
 };

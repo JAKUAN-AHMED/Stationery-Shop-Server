@@ -1,19 +1,30 @@
-import { Model } from "mongoose";
-import { USER_ROLE } from "./user.constant";
+import { Model } from 'mongoose';
+import { USER_ROLE } from './user.constant';
 
-export interface IUser {
+export type TRole = 'admin' | 'user';
+export type TuserStatus = 'active' | 'blocked';
+
+export interface TUser {
   name: string;
   email: string;
-  phone:string,
   password: string;
-  role?: 'user' | 'admin';
+  role?: TRole;
+  phone?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+  postalCode?: string;
+  status?: TuserStatus;
+  isDeleted?: boolean;
 }
 
-export interface UserInterfaceModel extends Model<IUser> {
-  isUserExistByCustomId: (id: string) => Promise<IUser>;
+export interface UserInterfaceModel extends Model<TUser> {
+  isUserExistsByCustomEmail: (email: string) => Promise<TUser>;
   isPasswordMatch: (
     password: string,
     storedHashedPassword: string,
   ) => Promise<boolean>;
-};
-export type TUSER_ROLE = keyof typeof USER_ROLE;
+  isDeletedUser: (id: string) => Promise<boolean>;
+}
+
+export type TuserRole = keyof typeof USER_ROLE;

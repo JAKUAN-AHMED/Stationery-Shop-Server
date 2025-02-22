@@ -1,20 +1,24 @@
-import { Router } from "express";
-import validateRequest from "../../middlewares/ValidateRequest";
-import { OrderControllers } from "./order.controller";
-import auth from "../../middlewares/auth";
-import { OrderValidationSchema, updateOrderValidation } from "./order.validation";
+import { Router } from 'express';
+import validateRequest from '../../middlewares/ValidateRequest';
+import { OrderControllers } from './order.controller';
+import auth from '../../middlewares/auth';
 
-const router=Router();
+const router = Router();
 //create order
-router.post('/create-order',auth('admin','user'),validateRequest(OrderValidationSchema),OrderControllers.createOrder)
+router.post('/verify', auth('admin', 'user'), OrderControllers.verifyPayment);
+router.post(
+  '/create-order',
+  auth('admin', 'user'),
+  OrderControllers.createOrder,
+);
 
 //all order
-router.get('/',auth('admin'),OrderControllers.getAllOrder);
+router.get('/', auth('admin', 'user'), OrderControllers.getAllOrder);
 //single
-router.get('/:orderId', auth('user',"admin"), OrderControllers.singleOrder);
+router.get('/:orderId', auth('user', 'admin'), OrderControllers.singleOrder);
 
 //update
-router.patch('/:orderId', auth('admin'),validateRequest(updateOrderValidation), OrderControllers.updateOrder);
+router.patch('/:orderId', auth('admin'), OrderControllers.updateOrder);
 //delete order
-router.delete('/:orderId',auth('admin'),OrderControllers.deleteOrder);
-export const OrderRoutes=router;
+router.delete('/:orderId', auth('admin', 'user'), OrderControllers.deleteOrder);
+export const OrderRoutes = router;

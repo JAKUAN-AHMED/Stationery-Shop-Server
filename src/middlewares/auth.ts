@@ -3,13 +3,15 @@ import { NextFunction, Response, Request } from 'express';
 
 import AppError from '../errors/AppError';
 import config from '../config';
-import { TUSER_ROLE } from '../modules/user/user.interface';
+
 
 import httpStatus from 'http-status';
 import catchAsync from '../utility/catchAsync';
-import UserModel from '../modules/user/user.model';
 
-const auth = (...requiredRoles: TUSER_ROLE[]) => {
+import { TuserRole } from '../modules/user/user.interface';
+import { UserModel } from '../modules/user/user.model';
+
+const auth = (...requiredRoles: TuserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
     //check if token sent from the client
@@ -28,9 +30,9 @@ const auth = (...requiredRoles: TUSER_ROLE[]) => {
     ) as JwtPayload;
     //check if the user has the required role to access the route
 
-    const { role, userId, iat } = decoded;
+    const { role, email, iat } = decoded;
     // checking if the user is exist
-    const user = await UserModel.isUserExistByCustomId(userId);
+    const user = await UserModel.isUserExistsByCustomEmail(email);
 
     if (!user) {
       throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
@@ -43,7 +45,7 @@ const auth = (...requiredRoles: TUSER_ROLE[]) => {
       );
     }
 
-    req.user = decoded as JwtPayload;
+    req.user = user;
     next();
   });
 };

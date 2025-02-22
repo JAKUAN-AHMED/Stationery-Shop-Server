@@ -1,25 +1,34 @@
-import { Router } from "express";
-import validateRequest from "../../middlewares/ValidateRequest";
-import { createUserValidation, updateUserValidation } from "../user/user.validation";
-import { AuthController } from "./auth.controller";
-import auth from "../../middlewares/auth";
-import { ChangePassValidationSchema } from "./auth.validation";
+import { Router } from 'express';
+import validateRequest from '../../middlewares/ValidateRequest';
 
-const router=Router();
+import { AuthController } from './auth.controller';
+import auth from '../../middlewares/auth';
+import { AuthValidations } from './auth.validation';
 
-//register
-router.post('/register',validateRequest(createUserValidation),AuthController.register)
+const router = Router();
 
 //login
-router.post('/login',AuthController.login)
+router.post(
+  '/login',
+  validateRequest(AuthValidations.loginValidationSchema),
+  AuthController.loginUser,
+);
 
 //logout
-router.post('/logout',AuthController.logout)
-
-//profile update
-router.patch('/update-profile',auth('user','admin'),validateRequest(updateUserValidation),AuthController.updateProfile);
+router.post('/logout', AuthController.logout);
 
 //change pass
-router.post('/change-pass',auth('user'),validateRequest(ChangePassValidationSchema),AuthController.changePassword);
+router.post(
+  '/change-pass',
+  auth('user'),
+  validateRequest(AuthValidations.ChangePassValidationSchema),
+  AuthController.changePassword,
+);
 
-export const AuthRoutes=router;
+router.post(
+  '/refresh-token',
+  validateRequest(AuthValidations.refreshTokenValidationSchema),
+  AuthController.refreshToken,
+);
+
+export const AuthRoutes = router;
