@@ -1,4 +1,3 @@
-import { auth } from './../../../../Stationery-Shop-Client/src/redux/features/auth/authSlice';
 import { model, Schema } from 'mongoose';
 import { productStatus, productTypes } from './product.constant';
 import { TProduct } from './product.inteface';

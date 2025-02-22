@@ -32,7 +32,7 @@ const loginUser = async (payload: TLoginUser) => {
 
   const JwtPayload = {
     email: user.email,
-    role: user.role , // provide a default role if undefined
+    role: user.role, // provide a default role if undefined
   };
 
   //create toke and send to the client
