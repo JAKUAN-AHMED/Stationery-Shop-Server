@@ -1,6 +1,6 @@
 # 🛒Ethereal Scribbles
 
-🚀 **Live Demo**: [Stationery Shop B4A2V5](https://ethereal-backend-rho.vercel.app/)  
+🚀 **Live Demo**: [Ethereal Scribbles](https://ethereal-backend-rho.vercel.app/)  
 
 Welcome to **Ethereal Scribbles**, a robust backend application designed to manage products, orders, and revenues for a stationery shop. Built with **TypeScript**, **Express.js**, **MongoDB**, and **Mongoose**, this project implements clean architecture, validation, and advanced error handling to ensure high reliability.  
 
