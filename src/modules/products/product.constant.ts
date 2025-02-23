@@ -35,6 +35,7 @@ export const productStatus: TproductStatus[] = [
 export const stationeryProductSearchableFields = [
   'name',
   'author',
+  'status',
   'description',
   'category',
   'brand',
