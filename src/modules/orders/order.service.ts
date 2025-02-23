@@ -27,20 +27,18 @@ const createOrder = async (
       if (product) {
         const subtotal = product ? (product.price || 0) * item.quantity : 0;
         totalPrice += subtotal;
-
-        const stockQuantity = product.stockQuantity - item.quantity;
-        product.stockQuantity = stockQuantity;
-        product.save();
         return item;
       }
     }),
   );
+  
 
   let order = await OrderModel.create({
     user,
     products: productDetails,
     totalPrice,
   });
+  
   
   
   // payment integration
@@ -57,9 +55,7 @@ const createOrder = async (
     customer_post_code: user.postalCode,
   };
   
-  
   const payment = await orderUtils.makePaymentAsync(shurjopayPayload);
-    console.log('payment', payment);
   if (payment?.transactionStatus) {
     order = await order.updateOne({
       transaction: {
@@ -68,43 +64,16 @@ const createOrder = async (
       },
     });
   }
-  
 
-  return payment?.checkout_url;
+  return payment.checkout_url;
 };
 
 //all order
-const getAllOrder = async (query: Record<string, unknown>) => {
-  const orders = new QueryBuilder(OrderModel.find(), query)
-    .search(OrderSearchableFields)
-    .filter()
-    .paginate()
-    .sort()
-    .fields();
-
-  const order = await orders.modelQuery;
-  const meta = await orders.countTotal();
-  return { meta, order };
+const getOrders = async () => {
+  const data = await OrderModel.find();
+  return data;
 };
 
-//single
-const SingleOrder = async (orderId: string) => {
-  return await OrderModel.findById(orderId);
-};
-
-//update
-const updateOrder = async (orderId: string, payload: Partial<TOrder>) => {
-  return await OrderModel.findByIdAndUpdate(
-    orderId,
-    { $set: payload },
-    { new: true, runValidators: true },
-  );
-};
-
-//delete
-const deleteOrder = async (orderId: string) => {
-  return await OrderModel.findByIdAndDelete(orderId);
-};
 
 //verify payment
 const verifyPayment = async (order_id: string) => {
@@ -139,9 +108,6 @@ const verifyPayment = async (order_id: string) => {
 
 export const OrderServices = {
   createOrder,
-  getAllOrder,
-  SingleOrder,
-  deleteOrder,
-  updateOrder,
+  getOrders,
   verifyPayment,
 };

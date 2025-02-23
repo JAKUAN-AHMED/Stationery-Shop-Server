@@ -1,6 +1,6 @@
 import Shurjopay, { PaymentResponse, VerificationResponse } from 'shurjopay';
-import config from '../../config';
 
+import config from '../../config';
 const shurjopay = new Shurjopay();
 
 shurjopay.config(
@@ -10,6 +10,8 @@ shurjopay.config(
   config.sp.sp_prefix!,
   config.sp.sp_return_url!,
 );
+
+// console.log(shurjopay);
 
 const makePaymentAsync = async (
   paymentPayload: any,
@@ -21,7 +23,21 @@ const makePaymentAsync = async (
       (error) => reject(error),
     );
   });
+
+  //   const paymentResult = await shurjopay.makePayment(
+  //     paymentPayload,
+  //     (response) => {
+  //       sendResponse(res, {
+  //         statusCode: 200,
+  //         message: "Order placed successfully",
+  //         data: response,
+  //       });
+  //     },
+  //     (error) => console.log(error)
+  //   );
+  //   return paymentResult;
 };
+
 const verifyPaymentAsync = (
   order_id: string,
 ): Promise<VerificationResponse[]> => {
@@ -33,8 +49,6 @@ const verifyPaymentAsync = (
     );
   });
 };
-
-
 
 export const orderUtils = {
   makePaymentAsync,
